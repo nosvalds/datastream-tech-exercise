@@ -16,10 +16,10 @@ Code can be submitted preferably as an online repository (GitHub, BitBucket, etc
 
 ## MVP Design
 
-- [ ] Page with button to upload csv file from the filesystem 
-- [ ] Once .csv is loaded, there should be an input to select “MonitoringLocationID”, the accepted values are from the .csv
+- [x] Page with button to upload csv file from the filesystem 
+- [x] Once .csv is loaded, there should be an input to select “MonitoringLocationID”, the accepted values are from the .csv
 - [ ] Once “MonitoringLocationID” is selected, calculate the average of “ResultValue” for “CharacteristicName" === "Temperature, water”
 - [ ] Display  “MonitoringLocationID”, average of “ResultValue”
-
+- [ ] Make it look good
 
 

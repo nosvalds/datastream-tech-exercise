@@ -19,8 +19,6 @@
 </form>
 
 {#if form?.success}
-	<!-- this message is ephemeral; it exists because the page was rendered in
-	       response to a form submission. it will vanish if the user reloads -->
 	<p>Successfully uploaded file: {form.fileName}</p>
     <form method="post" action="?/calculate">
         <div>
