@@ -12,6 +12,9 @@
 - `npm i` - install dependencies
 - `npm run dev -- --open` - run the Sveltkit project and serve up the site at `http://localhost:5173/`
 
+## Design
+
+See [DESIGN.md](./DESIGN.md)
 
 # sv
 

@@ -35,3 +35,5 @@ Code can be submitted preferably as an online repository (GitHub, BitBucket, etc
 - Ensuring the page follows accessibility guidelines
 
 - I handle loading/processing the csv differently in client/vs server, duplicating some code, if I hanlded all on server this would be cleaner and more consistent
+
+- Adding more robust error handling for csv loading and calculations
