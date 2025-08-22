@@ -1,8 +1,31 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
+	import { enhance } from '$app/forms';
 
-	let { data, form }: PageProps = $props();
-	console.log(form);
+	let { form }: PageProps = $props();
+	let monitoringLocationIds = $state<string[]>([]);
+
+	function handleFileChange(event: Event) {
+		const input = event.target as HTMLInputElement;
+		if (input.files && input.files.length > 0) {
+			const file = input.files[0];
+			console.log('Selected file:', file.name);
+
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				let csvText = e.target?.result as string;
+
+				// create array of lines and skip header line and end newline
+				const textArray = csvText.split('\n').slice(1, -1);
+
+				// get list of monitoring location ids to return for selector
+				const ids = new Set<string>();
+				textArray.forEach((line) => ids.add(line.split(',')[1]));
+				monitoringLocationIds = [...ids];
+			};
+			reader.readAsText(file);
+		}
+	}
 </script>
 
 <div class="flex justify-center gap-4 p-4">
@@ -13,12 +36,7 @@
 			location and calculate the average water temperature for the selected location.
 		</p>
 
-		<form
-			class="flex items-end gap-4"
-			method="post"
-			enctype="multipart/form-data"
-			action="?/upload"
-		>
+		<form class="flex items-end gap-4" method="post" enctype="multipart/form-data" use:enhance>
 			<div>
 				<label class="mb-2 block" for="dataset">File</label>
 				<input
@@ -27,39 +45,35 @@
 					id="dataset"
 					name="dataset"
 					accept=".csv"
+					onchange={handleFileChange}
 				/>
 			</div>
-			<div>
-				<button
-					class="rounded border border-[#d0375b] bg-[#d0375b] px-4 py-2 text-white hover:bg-white hover:text-[#d0375b]"
-					>Upload</button
-				>
-			</div>
-		</form>
-
-		{#if form?.success}
-			<p>Successfully uploaded file: {form.fileName}</p>
-			<form method="post" action="?/calculate">
+			{#if monitoringLocationIds?.length > 0}
 				<div>
-					<label for="location">Select Monitoring Location:</label>
+					<label for="location">Monitoring Location</label>
 					<select class="rounded border border-stone-300 px-2 py-1" id="location" name="location">
 						<option class="text-stone-500" value="">--Please Select--</option>
-						{#each Array.from(form?.monitoringLocationIds ?? []) as location}
+						{#each monitoringLocationIds as location}
 							<option value={location}>{location}</option>
 						{/each}
 					</select>
 				</div>
 				<div>
 					<button
-						class="rounded border border-[#d0375b] bg-[#d0375b] px-4 py-2 text-white hover:bg-white hover:text-[#d0375b]"
+						class="rounded border border-[#d0375b] bg-[#d0375b] px-4 py-1 text-white hover:bg-white hover:text-[#d0375b]"
 						>Calculate</button
 					>
 				</div>
-			</form>
-		{/if}
-		{#if form?.averageWaterTemp}
+			{/if}
+		</form>
+		{#if form?.success}
+			<p>Processed File: <span class="font-bold">{form.fileName}</span></p>
 			<p>
-				Average Water Temperature for location {form.monitoringLocationId}: {form.averageWaterTemp}°C
+				Average Water Temperature for location {form.monitoringLocationId}:
+				<span class="font-bold">
+					{form.averageWaterTemp}
+					{form.averageWaterTempUnit}</span
+				>
 			</p>
 		{/if}
 	</div>
